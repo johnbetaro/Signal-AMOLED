@@ -1,0 +1,119 @@
+name: build
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * *'
+  
+jobs:
+  sync-with-upstream:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+  
+      - uses: actions/checkout@main
+        with:
+          repository: signalapp/Signal-Android
+          submodules: true
+
+      - name: Compare Tags
+        id: compare_tags
+        run: |
+          LATEST_TAG_MAIN=$(curl -s https://api.github.com/repos/johnbetaro/Signal-AMOLED/releases/latest | jq -r '.tag_name')
+          LATEST_TAG=$(curl -s https://api.github.com/repos/signalapp/Signal-Android/releases/latest | jq -r '.tag_name')
+          if [ "$LATEST_TAG" == "$LATEST_TAG_MAIN" ]; then
+            echo "Latest tags are the same. Skipping the following steps."
+            echo "::set-output name=skip_steps::true"
+          else
+            echo "Latest tags are different. Continue with the following steps."
+            echo "::set-output name=skip_steps::false"
+          fi
+
+      - name: Set Up JDK 17
+        uses: actions/setup-java@main
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+        if: steps.compare_tags.outputs.skip_steps != 'true'
+
+      - name: Enlarge Swapfile
+        run: |
+          export SWAP_FILE=$(swapon --show=NAME | tail -n 1)
+          sudo swapoff $SWAP_FILE
+          sudo rm $SWAP_FILE
+          sudo fallocate -l 8192M $SWAP_FILE
+          sudo chmod 600 $SWAP_FILE
+          sudo mkswap $SWAP_FILE
+          sudo swapon $SWAP_FILE
+        if: steps.compare_tags.outputs.skip_steps != 'true'
+      
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+        if: steps.compare_tags.outputs.skip_steps != 'true'
+
+      - name: Change Colors
+        run: |
+          sed -i '{
+            s/\(<color name="signal_dark_colorSurface">#\)[0-9a-fA-F]\{6\}/\1000000/g
+            s/\(<color name="signal_dark_colorSurfaceVariant">#\)[0-9a-fA-F]\{6\}/\1303033/g
+            s/\(<color name="signal_dark_colorBackground">#\)[0-9a-fA-F]\{6\}/\1000000/g
+            s/\(<color name="signal_dark_colorSurface1">#\)[0-9a-fA-F]\{6\}/\1000000/g
+            s/\(<color name="signal_dark_colorSurface2">#\)[0-9a-fA-F]\{6\}/\1000000/g
+            s/\(<color name="signal_dark_colorSurface3">#\)[0-9a-fA-F]\{6\}/\1000000/g
+            s/\(<color name="signal_dark_colorSurface4">#\)[0-9a-fA-F]\{6\}/\1000000/g
+            s/\(<color name="signal_dark_colorSurface5">#\)[0-9a-fA-F]\{6\}/\1000000/g
+            s/\(<color name="signal_dark_colorBackground_92">#\)[0-9a-fA-F]\{8\}/\1FF000000/g
+            s/\(<color name="signal_dark_colorSurface_87">#\)[0-9a-fA-F]\{8\}/\1FF000000/g
+            s/\(<color name="signal_dark_colorSurfaceVariant_92">#\)[0-9a-fA-F]\{8\}/\1FF000000/g
+          }' app/src/main/res/values/material3_colors_dark.xml
+        if: steps.compare_tags.outputs.skip_steps != 'true'
+
+      - name: Display Changed Colors
+        run: |
+          grep -E "<color name=\"signal_dark_color(Background|Surface|SurfaceVariant)_?[0-9]{0,2}\">#(1)?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})</color>" app/src/main/res/values/material3_colors_dark.xml
+        if: steps.compare_tags.outputs.skip_steps != 'true'
+          
+      - name: Build With Gradle
+        run: ./gradlew assemblePlayProdRelease
+        if: steps.compare_tags.outputs.skip_steps != 'true'
+
+      - name: Sign APKs
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          echo "${KEYSTORE_BASE64}" | base64 -d > apksign.keystore
+          for apk in app/build/outputs/apk/playProd/release/*-unsigned-*.apk; do
+            out=${apk/-unsigned-/-signed-}
+            ${ANDROID_HOME}/build-tools/34.0.0/apksigner sign --ks apksign.keystore --ks-pass env:KEYSTORE_PASSWORD --out "${out}" "${apk}"
+            echo "$(sha256sum ${out})"
+          done
+          rm apksign.keystore
+        if: steps.compare_tags.outputs.skip_steps != 'true'
+        
+      - name: Create Release And Upload
+        env:
+           GITHUB_TOKEN: ${{ secrets.GAT }}
+        run: |
+          LATEST_TAG=$(curl -s https://api.github.com/repos/signalapp/Signal-Android/releases/latest | jq -r '.tag_name')
+          rm -f app/build/outputs/apk/playProd/release/*unsigned*.apk
+          gh release create "$LATEST_TAG" --repo johnbetaro/Signal-AMOLED app/build/outputs/apk/playProd/release/*.apk
+        if: steps.compare_tags.outputs.skip_steps != 'true'
+
+      - name: Check And Delete Release If No APKs Uploaded
+        env:
+          GITHUB_TOKEN: ${{ secrets.GAT }}
+        run: |
+          release_info=$(curl -s https://api.github.com/repos/JohnBetaro/Signal-AMOLED/releases/latest)
+          apk_asset_count=$(echo $release_info | jq '.assets | length')
+          echo "APK Asset Count: $apk_asset_count"
+          if [[ $apk_asset_count -eq 0 ]]; then
+            echo "No APKs found. Deleting the release."
+            LATEST_TAG=$(echo $release_info | jq -r '.tag_name')
+            gh release delete "$LATEST_TAG" --cleanup-tag --yes
+          else
+            echo "APKs found. Not deleting the release."
+          fi
+        if: ${{ always() }}
