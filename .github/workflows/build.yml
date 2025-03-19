@@ -55,19 +55,24 @@ jobs:
 
       - name: Change Colors
         run: |
-          sed -i '{
-            s/\(<color name="signal_dark_colorSurface">#\)[0-9a-fA-F]\{6\}/\1000000/g
-            s/\(<color name="signal_dark_colorSurfaceVariant">#\)[0-9a-fA-F]\{6\}/\1303033/g
-            s/\(<color name="signal_dark_colorBackground">#\)[0-9a-fA-F]\{6\}/\1000000/g
-            s/\(<color name="signal_dark_colorSurface1">#\)[0-9a-fA-F]\{6\}/\1000000/g
-            s/\(<color name="signal_dark_colorSurface2">#\)[0-9a-fA-F]\{6\}/\1000000/g
-            s/\(<color name="signal_dark_colorSurface3">#\)[0-9a-fA-F]\{6\}/\1000000/g
-            s/\(<color name="signal_dark_colorSurface4">#\)[0-9a-fA-F]\{6\}/\1000000/g
-            s/\(<color name="signal_dark_colorSurface5">#\)[0-9a-fA-F]\{6\}/\1000000/g
-            s/\(<color name="signal_dark_colorBackground_92">#\)[0-9a-fA-F]\{8\}/\1FF000000/g
-            s/\(<color name="signal_dark_colorSurface_87">#\)[0-9a-fA-F]\{8\}/\1FF000000/g
-            s/\(<color name="signal_dark_colorSurfaceVariant_92">#\)[0-9a-fA-F]\{8\}/\1FF000000/g
-          }' app/src/main/res/values/material3_colors_dark.xml
+          if [ ! -f app/src/main/res/values/material3_colors_dark.xml ]; then
+            echo "File does not exist."
+            exit 1
+          else 
+            sed -i '{
+              s/\(<color name="signal_dark_colorSurface">#\)[0-9a-fA-F]\{6\}/\1000000/g
+              s/\(<color name="signal_dark_colorSurfaceVariant">#\)[0-9a-fA-F]\{6\}/\1303033/g
+              s/\(<color name="signal_dark_colorBackground">#\)[0-9a-fA-F]\{6\}/\1000000/g
+              s/\(<color name="signal_dark_colorSurface1">#\)[0-9a-fA-F]\{6\}/\1000000/g
+              s/\(<color name="signal_dark_colorSurface2">#\)[0-9a-fA-F]\{6\}/\1000000/g
+              s/\(<color name="signal_dark_colorSurface3">#\)[0-9a-fA-F]\{6\}/\1000000/g
+              s/\(<color name="signal_dark_colorSurface4">#\)[0-9a-fA-F]\{6\}/\1000000/g
+              s/\(<color name="signal_dark_colorSurface5">#\)[0-9a-fA-F]\{6\}/\1000000/g
+              s/\(<color name="signal_dark_colorBackground_92">#\)[0-9a-fA-F]\{8\}/\1FF000000/g
+              s/\(<color name="signal_dark_colorSurface_87">#\)[0-9a-fA-F]\{8\}/\1FF000000/g
+              s/\(<color name="signal_dark_colorSurfaceVariant_92">#\)[0-9a-fA-F]\{8\}/\1FF000000/g
+            }' app/src/main/res/values/material3_colors_dark.xml
+          fi
         if: steps.compare_tags.outputs.skip_steps != 'true'
 
       - name: Display Changed Colors
@@ -77,9 +82,14 @@ jobs:
 
       - name: Replace Firebase Credentials
         run: | 
-          sed -i "s/1:312334754206:android:a9297b152879f266/${{ secrets.GOOGLE_APP_ID }}/g" app/src/main/res/values/firebase_messaging.xml
-          sed -i "s/AIzaSyDrfzNAPBPzX6key51hqo3p5LZXF5Y-yxU/${{ secrets.GOOGLE_API_KEY }}/g" app/src/main/res/values/firebase_messaging.xml
-          sed -i "s/>api-project-312334754206</>${{ secrets.PROJECT_ID }}</g" app/src/main/res/values/firebase_messaging.xml
+          if [ ! -f app/src/main/res/values/firebase_messaging.xml ]; then
+            echo "File does not exist."
+            exit 1
+          else 
+            sed -i "s/1:312334754206:android:a9297b152879f266/${{ secrets.GOOGLE_APP_ID }}/g" app/src/main/res/values/firebase_messaging.xml
+            sed -i "s/AIzaSyDrfzNAPBPzX6key51hqo3p5LZXF5Y-yxU/${{ secrets.GOOGLE_API_KEY }}/g" app/src/main/res/values/firebase_messaging.xml
+            sed -i "s/>api-project-312334754206</>${{ secrets.PROJECT_ID }}</g" app/src/main/res/values/firebase_messaging.xml
+          fi
         if: steps.compare_tags.outputs.skip_steps != 'true'
           
       - name: Build With Gradle
