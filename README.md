@@ -16,7 +16,7 @@
 
 # Screenshots :
 
-<div style="text-align: center;">
-    <img src="https://github.com/JohnBetaro/Signal-AMOLED/raw/main/images/Screenshot_1.png" style="width: 200px; height: auto;" alt="Screenshot 1">
-    <img src="https://github.com/JohnBetaro/Signal-AMOLED/raw/main/images/Screenshot_2.png" style="width: 200px; height: auto;" alt="Screenshot 2">
-</div>
+<p align="center">
+    <img src="https://github.com/JohnBetaro/Signal-AMOLED/raw/main/images/Screenshot_1.png" width="200" alt="Screenshot 1">
+    <img src="https://github.com/JohnBetaro/Signal-AMOLED/raw/main/images/Screenshot_2.png" width="200" alt="Screenshot 2">
+</p>
