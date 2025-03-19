@@ -1,0 +1,19 @@
+name: build
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  sync-with-upstream:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+  
+      - uses: actions/checkout@main
+
+      - name: Create Release And Upload
+        env:
+           GITHUB_TOKEN: ${{ secrets.GAT }}
+        run: |        
+          gh release create "$VERSION" --notes "Yet another release !"
