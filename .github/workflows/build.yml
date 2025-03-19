@@ -20,9 +20,9 @@ jobs:
       - name: Compare Tags
         id: compare_tags
         run: |
-          LATEST_TAG_MAIN=$(curl -s https://api.github.com/repos/johnbetaro/Signal-AMOLED/releases/latest | jq -r '.tag_name')
-          LATEST_TAG=$(curl -s https://api.github.com/repos/signalapp/Signal-Android/releases/latest | jq -r '.tag_name')
-          if [ "$LATEST_TAG" == "$LATEST_TAG_MAIN" ]; then
+          LATEST_VERSION_MAIN=$(curl -s https://api.github.com/repos/johnbetaro/Signal-AMOLED/releases/latest | jq -r '.tag_name')
+          LATEST_VERSION_REMOTE="v$(awk -F ' = ' '/val canonicalVersionName/ {print $2}' app/build.gradle.kts | tr -d '"')"
+          if [ "$LATEST_VERSION_REMOTE" == "$LATEST_VERSION_MAIN" ]; then
             echo "Latest tags are the same. Skipping the following steps."
             echo "::set-output name=skip_steps::true"
           else
