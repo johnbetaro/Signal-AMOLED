@@ -6,7 +6,7 @@ on:
     - cron: '0 1 * * *'
   
 jobs:
-  sync-with-upstream:
+  build:
     name: build
     runs-on: ubuntu-latest
 
