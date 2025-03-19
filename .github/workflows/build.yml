@@ -115,9 +115,9 @@ jobs:
         env:
            GITHUB_TOKEN: ${{ secrets.GAT }}
         run: |
-          LATEST_TAG=$(curl -s https://api.github.com/repos/signalapp/Signal-Android/releases/latest | jq -r '.tag_name')
+          VERSION=$(awk -F ' = ' '/val canonicalVersionName/ {print $2}' app/build.gradle.kts | tr -d '"')
           rm -f app/build/outputs/apk/playProd/release/*unsigned*.apk
-          gh release create "$LATEST_TAG" --repo johnbetaro/Signal-AMOLED app/build/outputs/apk/playProd/release/*.apk
+          gh release create "v$VERSION" --repo johnbetaro/Signal-AMOLED app/build/outputs/apk/playProd/release/*.apk
         if: steps.compare_tags.outputs.skip_steps != 'true'
 
       - name: Check And Delete Release If No APKs Uploaded
