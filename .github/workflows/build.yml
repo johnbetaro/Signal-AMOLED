@@ -79,7 +79,7 @@ jobs:
         run: | 
           sed -i 's/1:312334754206:android:a9297b152879f266/${{ secrets.GOOGLE_APP_ID }}/g' app/src/main/res/values/firebase_messaging.xml
           sed -i 's/AIzaSyDrfzNAPBPzX6key51hqo3p5LZXF5Y-yxU/${{ secrets.GOOGLE_API_KEY }}/g' app/src/main/res/values/firebase_messaging.xml
-          sed -i 's/>api-project-312334754206</${{ secrets.PROJECT_ID }}/g' app/src/main/res/values/firebase_messaging.xml
+          sed -i 's/>api-project-312334754206</>${{ secrets.PROJECT_ID }}</g' app/src/main/res/values/firebase_messaging.xml
         if: steps.compare_tags.outputs.skip_steps != 'true'
           
       - name: Build With Gradle
