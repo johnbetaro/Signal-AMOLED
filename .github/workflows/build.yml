@@ -80,7 +80,7 @@ jobs:
           grep -E "<color name=\"signal_dark_color(Background|Surface|SurfaceVariant)_?[0-9]{0,2}\">#(1)?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})</color>" app/src/main/res/values/material3_colors_dark.xml
         if: steps.compare_tags.outputs.skip_steps != 'true'
 
-      - name: Replace Firebase Credentials
+      - name: Replace Firebase And Maps Credentials
         run: | 
           if [ ! -f app/src/main/res/values/firebase_messaging.xml ]; then
             echo "File does not exist."
@@ -89,6 +89,7 @@ jobs:
             sed -i "s/1:312334754206:android:a9297b152879f266/${{ secrets.GOOGLE_APP_ID }}/g" app/src/main/res/values/firebase_messaging.xml
             sed -i "s/AIzaSyDrfzNAPBPzX6key51hqo3p5LZXF5Y-yxU/${{ secrets.GOOGLE_API_KEY }}/g" app/src/main/res/values/firebase_messaging.xml
             sed -i "s/>api-project-312334754206</>${{ secrets.PROJECT_ID }}</g" app/src/main/res/values/firebase_messaging.xml
+            sed -i "s/AIzaSyCSx9xea86GwDKGznCAULE9Y5a8b-TfN9U/${{ secrets.MAPS_KEY }}/g" app/src/main/res/values/firebase_messaging.xml
           fi
         if: steps.compare_tags.outputs.skip_steps != 'true'
           
