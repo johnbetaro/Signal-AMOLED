@@ -14,4 +14,9 @@
 - Replaced the classic dark theme with pure black theme.
 - The App is fully changed, built, signed, released by [GitHub Actions](https://github.com/JohnBetaro/Signal-AMOLED/actions) (without any human intervention), all of this is for the sake of transparency. The [workflow file](https://github.com/JohnBetaro/Signal-AMOLED/blob/main/.github/workflows/build.yml) that I made will automatically check for updates everyday and will publish an update if there is any.
 
+# Screenshots :
 
+<div style="text-align: center;">
+    <img src="https://github.com/JohnBetaro/Signal-AMOLED/raw/main/images/Screenshot_1.png" style="width: 200px; height: auto;" alt="Screenshot 1">
+    <img src="https://github.com/JohnBetaro/Signal-AMOLED/raw/main/images/Screenshot_2.png" style="width: 200px; height: auto;" alt="Screenshot 2">
+</div>
