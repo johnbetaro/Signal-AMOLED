@@ -16,4 +16,4 @@ jobs:
         env:
            GITHUB_TOKEN: ${{ secrets.GAT }}
         run: |        
-          gh release create tag --notes "Yet another release !"
+          gh release create v1.2.3 --notes "bugfix release"
