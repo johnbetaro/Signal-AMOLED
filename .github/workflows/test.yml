@@ -16,4 +16,4 @@ jobs:
         env:
            GITHUB_TOKEN: ${{ secrets.GAT }}
         run: |        
-          gh release create "$VERSION" --notes "Yet another release !"
+          gh release create tag --notes "Yet another release !"
