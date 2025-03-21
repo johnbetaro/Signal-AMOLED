@@ -29,7 +29,7 @@
 <img src="https://user-images.githubusercontent.com/69304392/148696068-0cfea65d-b18f-4685-82b5-329a330b1c0d.png"
 alt="Get it on GitHub" align="center" height="80" /></a>
 
-<a href="https://github.com/johnbetaro/fdroid#how-to-use">
+<a href="https://github.com/johnbetaro/fdroid#how-to-use-">
 <img src="https://f-droid.org/badge/get-it-on.png"
 alt="Get it on F-Droid" align="center" height="80" /></a>
 </div>
