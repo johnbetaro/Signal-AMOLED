@@ -20,3 +20,16 @@
     <img src="https://github.com/JohnBetaro/Signal-AMOLED/raw/main/images/Screenshot_1.png" width="200" alt="Screenshot 1">
     <img src="https://github.com/JohnBetaro/Signal-AMOLED/raw/main/images/Screenshot_2.png" width="200" alt="Screenshot 2">
 </p>
+
+<div align="center">
+
+# Download
+
+<a href="https://github.com/johnbetaro/Signal-AMOLED/releases">
+<img src="https://user-images.githubusercontent.com/69304392/148696068-0cfea65d-b18f-4685-82b5-329a330b1c0d.png"
+alt="Get it on GitHub" align="center" height="80" /></a>
+
+<a href="https://github.com/johnbetaro/fdroid#how-to-use">
+<img src="https://f-droid.org/badge/get-it-on.png"
+alt="Get it on F-Droid" align="center" height="80" /></a>
+</div>
