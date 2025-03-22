@@ -2,9 +2,6 @@
     <a href="https://github.com/johnbetaro/Signal-AMOLED/releases/latest">
         <img src="https://img.shields.io/github/v/release/johnbetaro/Signal-AMOLED?display_name=tag" alt="GitHub release">
     </a>
-    <a href="https://github.com/johnbetaro/Signal-AMOLED/releases/">
-        <img src="https://img.shields.io/github/downloads/johnbetaro/Signal-AMOLED/total.svg" alt="GitHub All Releases">
-    </a>
     <a href="https://github.com/johnbetaro/Signal-AMOLED/actions/workflows/build.yml">
         <img src="https://github.com/johnbetaro/Signal-AMOLED/actions/workflows/build.yml/badge.svg" alt="Build Badge">
     </a>
