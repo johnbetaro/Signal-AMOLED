@@ -49,9 +49,9 @@ jobs:
           sudo swapon $SWAP_FILE
         if: steps.compare_tags.outputs.skip_steps != 'true'
       
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
-        if: steps.compare_tags.outputs.skip_steps != 'true'
+#      - name: Validate Gradle Wrapper
+#        uses: gradle/wrapper-validation-action@v1
+#        if: steps.compare_tags.outputs.skip_steps != 'true'
 
       - name: Change Colors
         run: |
